@@ -17,6 +17,9 @@ public class SimWindow : GameWindow
     protected override void OnUpdateFrame(FrameEventArgs e)
     {
         base.OnUpdateFrame(e);
+        
+        GL.BindBuffer(BufferTarget.ArrayBuffer, vbo);
+        GL.BufferSubData(BufferTarget.ArrayBuffer, IntPtr.Zero, sim.vertices.Length * sizeof(float), sim.vertices);
 
         if (KeyboardState.IsKeyDown(Keys.Escape)) Close();
     }
