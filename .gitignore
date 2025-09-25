@@ -1,0 +1,41 @@
+# Rider project files
+.idea/
+*.sln.iml
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Build results
+bin/
+obj/
+out/
+
+# NuGet packages
+*.nupkg
+packages/
+*.snupkg
+
+# Rider local settings
+.idea/.idea.*
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/dictionaries
+.idea/gradle.xml
+.idea/libraries
+.idea/modules.xml
+.idea/caches/
+
+# Rider logs
+.idea/.idea.log
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.log
+*.vs/
