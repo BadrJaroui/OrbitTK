@@ -1,11 +1,7 @@
 public class Simulation
 {
-    public float[] vertices =
-    {
-        -0.5f, -0.5f, 0.0f, //Bottom-left vertex
-        0.5f, -0.5f, 0.0f, //Bottom-right vertex
-        0.0f, 0.5f, 0.0f //Top vertex
-    };
+
+    public float[] vertices = DrawCircle(100);
 
     public void Vertex_Rotation()
     {
@@ -47,5 +43,24 @@ public class Simulation
 
        vertices[6] = (float)newX2;
        vertices[7] = (float)newY2;
+    }
+
+    public static float[] DrawCircle(int numv)
+    {
+        float r = 0.2f;
+        float cx = 0f;
+        float cy = 0f;
+        
+        float[] vertices = new float[numv * 3];
+
+        for (int i = 0; i < numv; i++)
+        {
+            double angle = 2 * Math.PI * i / numv;
+            vertices[i * 3] = cx + r * (float)Math.Cos(angle);
+            vertices[i * 3 + 1] = cy + r * (float)Math.Sin(angle);
+            vertices[i * 3 + 2] = 0f;
+        }
+
+        return vertices;
     }
 }
