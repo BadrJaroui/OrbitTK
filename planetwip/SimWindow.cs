@@ -11,12 +11,16 @@ public class SimWindow : GameWindow
 
     private int vao;
     private int vbo;
+    private int borderVao;
+    private int borderVbo;
     private int shaderProgram;
     private Simulation sim = new();
 
     protected override void OnUpdateFrame(FrameEventArgs e)
     {
         base.OnUpdateFrame(e);
+
+        sim.GravitySim((float)e.Time);
         
         GL.BindBuffer(BufferTarget.ArrayBuffer, vbo);
         GL.BufferSubData(BufferTarget.ArrayBuffer, IntPtr.Zero, sim.vertices.Length * sizeof(float), sim.vertices);
@@ -32,6 +36,9 @@ public class SimWindow : GameWindow
         GL.UseProgram(shaderProgram);
         GL.BindVertexArray(vao);
         GL.DrawArrays(PrimitiveType.TriangleFan, 0, sim.vertices.Length / 3);
+
+        GL.BindVertexArray(borderVao);
+        GL.DrawArrays(PrimitiveType.Lines, 0, sim.border.Length / 3);
             
         SwapBuffers();
     }
@@ -40,15 +47,23 @@ public class SimWindow : GameWindow
     {
         base.OnLoad();
 
+        // Circle
         vao = GL.GenVertexArray();
         GL.BindVertexArray(vao);
-        
         vbo = GL.GenBuffer();
         GL.BindBuffer(BufferTarget.ArrayBuffer, vbo);
         GL.BufferData(BufferTarget.ArrayBuffer, sim.vertices.Length * sizeof(float), sim.vertices, BufferUsage.StaticDraw);
-        
         GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 0, 0);
         GL.EnableVertexArrayAttrib(vao, 0);
+        
+        // Border
+        borderVao = GL.GenVertexArray();
+        GL.BindVertexArray(borderVao);
+        borderVbo = GL.GenBuffer();
+        GL.BindBuffer(BufferTarget.ArrayBuffer, borderVbo);
+        GL.BufferData(BufferTarget.ArrayBuffer, sim.border.Length * sizeof(float), sim.border, BufferUsage.StaticDraw);
+        GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 0, 0);
+        GL.EnableVertexArrayAttrib(borderVao, 0);
 
         shaderProgram = GL.CreateProgram();
         
