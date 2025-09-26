@@ -2,7 +2,60 @@ public class Simulation
 {
 
     public float[] vertices = DrawCircle(100);
+    public float[] border = [-1f, -0.9f, 0f, 1f, -0.9f, 0f];
+    float velocity = 0f;
 
+    public static float[] DrawCircle(int numv)
+    {
+        float r = 0.2f;
+        float cx = 0f;
+        float cy = 0f;
+
+        float[] vertices = new float[numv * 3];
+
+        for (int i = 0; i < numv; i++)
+        {
+            double angle = 2 * Math.PI * i / numv;
+            vertices[i * 3] = cx + r * (float)Math.Cos(angle);
+            vertices[i * 3 + 1] = cy + r * (float)Math.Sin(angle);
+            vertices[i * 3 + 2] = 0f;
+        }
+
+        return vertices;
+    }
+
+    public void GravitySim(float deltaTime)
+    {
+        float gravity = -9.8f;
+        velocity += gravity * deltaTime;
+
+        // Searches for lowest vertex on Y-axis
+        float minY = vertices[1];
+        for (int j = 1; j < vertices.Length; j += 3)
+        {
+            minY = Math.Min(minY, vertices[j]);
+        }
+
+        // Lowest point and border don't always align perfectly;
+        // when passing through border, corrects all vertices to appear
+        // as if the circle never passed it
+        if (minY < border[1])
+        {
+            float correction = border[1] - minY;
+            for (int k = 1; k < vertices.Length; k += 3)
+            {
+                vertices[k] += correction;
+            }
+            // Reverse velocity to simulate bounce
+            velocity = -velocity * 0.7f;
+        }
+
+        for (int i = 1; i < vertices.Length; i += 3)
+        {
+            vertices[i] += velocity * deltaTime;
+        }
+    }
+    
     public void Vertex_Rotation()
     {
         float cx = (vertices[0] + vertices[3] + vertices[6]) / 3f;
@@ -43,24 +96,5 @@ public class Simulation
 
        vertices[6] = (float)newX2;
        vertices[7] = (float)newY2;
-    }
-
-    public static float[] DrawCircle(int numv)
-    {
-        float r = 0.2f;
-        float cx = 0f;
-        float cy = 0f;
-        
-        float[] vertices = new float[numv * 3];
-
-        for (int i = 0; i < numv; i++)
-        {
-            double angle = 2 * Math.PI * i / numv;
-            vertices[i * 3] = cx + r * (float)Math.Cos(angle);
-            vertices[i * 3 + 1] = cy + r * (float)Math.Sin(angle);
-            vertices[i * 3 + 2] = 0f;
-        }
-
-        return vertices;
     }
 }
